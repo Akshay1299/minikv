@@ -45,8 +45,8 @@ public final class MiniKvCli {
     }
 
     private static boolean handle(MiniKV db, String line) {
-        if (line.isEmpty()) {
-            return true;
+        if (line.isEmpty() || line.startsWith("#")) {
+            return true; // blank lines and # comments are ignored (handy for scripted input)
         }
         String[] parts = line.split("\\s+", 3);
         String cmd = parts[0].toLowerCase();

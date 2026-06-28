@@ -11,6 +11,10 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue">
 </p>
 
+<p align="center">
+  <img src="docs/demo.gif" alt="MiniKV CLI demo — put, get, flush, stats, delete" width="760">
+</p>
+
 ---
 
 MiniKV is the write path of a real storage engine (think LevelDB / RocksDB / Cassandra),
