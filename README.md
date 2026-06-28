@@ -61,6 +61,40 @@ try (MiniKV db = MiniKV.open(Path.of("data"))) {
 Keys and values are arbitrary `byte[]` (String overloads provided). An acknowledged write
 survives a crash — reopen the same directory and it's there.
 
+## See it in action
+
+A narrated walkthrough exercises every stage of the engine — write path, flush, reads,
+update/delete, compaction, and crash recovery — printing the real files that appear on disk:
+
+```bash
+./gradlew demo
+```
+
+<details>
+<summary>Sample output (abridged)</summary>
+
+```
+1) WRITE PATH  —  put() = append to WAL, then insert into the memtable
+  >> state: 0 SSTable(s), 3 key(s) buffered in memtable (254 B), lastSeq=3
+  >> files on disk:
+       wal.log                      137 bytes
+
+2) FLUSH  —  full memtable becomes an immutable SSTable; WAL is rotated
+  >> state: 1 SSTable(s), 0 key(s) buffered in memtable (0 B), lastSeq=3
+  >> files on disk:
+       MANIFEST                      18 bytes
+       sst-0000000001.db            190 bytes
+       wal.log                        0 bytes
+
+5) COMPACTION  —  many SSTables get merged into one
+  >> state: 1 SSTable(s), ...           # dozens of writes, still one merged SSTable
+       sst-0000000016.db           1482 bytes
+
+6) CRASH RECOVERY  —  reopen the same directory; nothing is lost
+    get(only:in:wal) -> not yet flushed   (recovered by replaying the WAL!)
+```
+</details>
+
 ### Try the CLI
 
 ```bash

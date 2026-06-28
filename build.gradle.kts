@@ -33,3 +33,10 @@ tasks.test {
 application {
     mainClass.set("dev.akshay.minikv.cli.MiniKvCli")
 }
+
+tasks.register<JavaExec>("demo") {
+    group = "application"
+    description = "Run the narrated MiniKV walkthrough."
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("dev.akshay.minikv.demo.Demo")
+}
